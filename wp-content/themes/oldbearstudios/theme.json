@@ -1,0 +1,59 @@
+{
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "760px",
+      "wideSize": "1200px"
+    },
+    "color": {
+      "palette": [
+        {
+          "slug": "ink",
+          "name": "Tinta",
+          "color": "#101412"
+        },
+        {
+          "slug": "paper",
+          "name": "Marfil",
+          "color": "#f2eadc"
+        },
+        {
+          "slug": "amber",
+          "name": "Ámbar",
+          "color": "#efaa59"
+        },
+        {
+          "slug": "moss",
+          "name": "Musgo",
+          "color": "#788b74"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "system",
+          "name": "Sistema",
+          "fontFamily": "\"Segoe UI\", system-ui, sans-serif"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "#101412",
+      "text": "#f2eadc"
+    },
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--system)"
+    },
+    "elements": {
+      "link": {
+        "color": {
+          "text": "#efaa59"
+        }
+      }
+    }
+  }
+}

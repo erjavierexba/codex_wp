@@ -1,0 +1,71 @@
+name: Validate WordPress
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  wordpress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JS, JSON and SVG
+        run: |
+          node --check wp-content/themes/oldbearstudios/assets/site.js
+          python3 - <<'PY'
+          import json, pathlib, xml.etree.ElementTree as ET
+          theme = pathlib.Path('wp-content/themes/oldbearstudios')
+          json.loads((theme / 'theme.json').read_text())
+          for asset in theme.glob('assets/*.svg'):
+              ET.parse(asset)
+          PY
+      - name: Configure isolated local environment
+        run: |
+          python3 - <<'PY'
+          import pathlib, secrets
+          data = pathlib.Path('.env.example').read_text()
+          replacements = {
+              'change-this-database-password': secrets.token_urlsafe(24),
+              'change-this-root-password': secrets.token_urlsafe(24),
+              'change-this-admin-password': secrets.token_urlsafe(24),
+              'you@example.com': 'integration@example.org',
+          }
+          for old, new in replacements.items():
+              data = data.replace(old, new)
+          pathlib.Path('.env').write_text(data)
+          PY
+      - name: Install WordPress
+        run: bash scripts/setup.sh
+      - name: Validate PHP and WordPress behavior
+        run: bash scripts/check.sh
+      - name: Check HTTP pages
+        run: |
+          curl --fail --retry 10 --retry-delay 2 --retry-connrefused http://localhost:8080/ > /tmp/oldbear-home.html
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('/tmp/oldbear-home.html').read_text()
+          assert 'Pequeño estudio. Grandes aventuras.' in html
+          assert 'CONCEPTO VISUAL' in html
+          assert 'Fatal error' not in html
+          assert 'name="contact_email"' not in html, 'Form must be disabled before setup'
+          PY
+          curl --fail http://localhost:8080/diario/ > /dev/null
+      - name: Package installable theme and plugin
+        run: |
+          mkdir -p dist
+          cd wp-content/themes
+          zip -qr ../../dist/oldbearstudios-theme.zip oldbearstudios
+          cd ../plugins
+          zip -qr ../../dist/oldbear-studio-plugin.zip oldbear-studio
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oldbearstudios-wordpress
+          path: dist/*.zip
+      - name: Diagnostic logs
+        if: failure()
+        run: docker compose logs --tail=80 wordpress db
+      - name: Stop local services
+        if: always()
+        run: docker compose down
