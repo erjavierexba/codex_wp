@@ -26,6 +26,7 @@ fi
 wp eval-file /opt/oldbear-tests/bootstrap.php
 if ! wp plugin is-installed elementor; then wp plugin install elementor --version=3.34.2; fi
 wp plugin activate elementor
+wp option update elementor_experiment-container active
 wp oldbear studio-demo
 '
 printf '\nListo. Tu web: %s/\nPanel: %s/wp-admin/\n' "$(oldbear_value WP_URL)" "$(oldbear_value WP_URL)"

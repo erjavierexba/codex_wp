@@ -49,6 +49,10 @@ final class Starter {
     public static function install(bool $set_front = false) {
         if (!current_user_can('manage_options')) { return new \WP_Error('forbidden','Se necesitan permisos de administración.'); }
         if (!did_action('elementor/loaded') || !class_exists('Elementor\\Plugin')) { return new \WP_Error('elementor_missing','Activa Elementor Free antes de preparar la landing.'); }
+        update_option('elementor_experiment-container', 'active');
+        if (!\Elementor\Plugin::$instance->elements_manager->get_element_types('container')) {
+            return new \WP_Error('containers_unavailable', 'Activa Contenedores en Elementor → Ajustes → Características y recarga el panel.');
+        }
         $existing = absint(get_option('oldbear_elementor_home'));
         if (get_post_type($existing) === 'page' && get_post_status($existing) !== 'trash') { return $existing; }
         $id = wp_insert_post(['post_type'=>'page','post_title'=>'Inicio · Elementor','post_status'=>$set_front ? 'publish' : 'draft','post_content'=>'[oldbear_games] [oldbear_roadmap] [oldbear_contact]'], true);
@@ -59,6 +63,11 @@ final class Starter {
         if (!$document->save(['elements'=>self::document(),'settings'=>['hide_title'=>'yes']])) {
             wp_delete_post($id, true);
             return new \WP_Error('document_failed','Elementor no pudo guardar el diseño.');
+        }
+        $stored = json_decode(get_post_meta($id, '_elementor_data', true), true);
+        if (!is_array($stored) || count($stored) !== count(self::document())) {
+            wp_delete_post($id, true);
+            return new \WP_Error('incomplete_document', 'Elementor no ha guardado todos los contenedores. No se ha cambiado la portada.');
         }
         update_option('oldbear_elementor_home', $id, false);
         if ($set_front) { update_option('show_on_front','page'); update_option('page_on_front',$id); self::seed(); }
