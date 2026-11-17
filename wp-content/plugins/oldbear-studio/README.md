@@ -5,7 +5,7 @@ Plugin de WordPress para estudios de videojuegos. Funciona con Elementor Free 3.
 ## Demostración en cinco minutos
 
 1. Instala el paquete de la rama `elementor` y abre **OldBear Studio** en el panel.
-2. Pulsa **Editar landing con Elementor**. La página contiene contenedores y widgets nativos, además de cuatro widgets de la categoría OldBear Studio.
+2. Pulsa **Editar landing con Elementor**. La página contiene contenedores y widgets nativos, además de widgets de la categoría OldBear Studio. Los botones de **Todo el sitio en Elementor** abren la cabecera, el pie, la 404, el Diario y la privacidad.
 3. Cambia el titular del widget Portada. Reordena secciones, sustituye el emblema con el widget Imagen o modifica los encabezados nativos.
 4. Filtra los juegos por género/plataforma, busca un nombre y prueba una búsqueda sin coincidencias. La respuesta usa una API pública de solo lectura.
 5. En **Roadmap**, cambia el estado de un hito. Se mueve de columna y cambia el progreso calculado.
@@ -22,8 +22,17 @@ Los ejemplos de bosque y dunas son conceptos visuales para probar funciones, no 
 | OldBear · Catálogo de juegos | Juegos por página, filtros y acento |
 | OldBear · Roadmap | Juego, límite de hitos y acento |
 | OldBear · Contacto | Titular, introducción, acento y tamaño del titular |
+| OldBear · Diario | Entradas por página, paginación, imagen destacada y textos sin entradas |
+| OldBear · Marca | Emblema y lema (usa el logotipo de Apariencia si existe) |
+| OldBear · Menú | Menú de WordPress y texto del botón móvil |
+| OldBear · Redes | URL de Steam, itch.io y Discord |
+| OldBear · Créditos del pie | Texto legal con {year} y {site}, enlace a privacidad y volver arriba |
 
-Los cuatro widgets se renderizan en PHP y se declaran dinámicos. Las piezas editoriales usan widgets nativos de Elementor. La página no es un bloque HTML incrustado ni un shortcode que encapsule toda la landing. Cabecera y pie pertenecen al tema y su identidad/navegación se gestionan desde Apariencia.
+Los widgets se renderizan en PHP y se declaran dinámicos. Las piezas editoriales usan widgets nativos de Elementor. Ninguna página es un bloque HTML incrustado ni un shortcode que encapsule su contenido.
+
+## Todo el sitio en Elementor
+
+Elementor Free no tiene Theme Builder. `includes/class-layout.php` guarda tres plantillas de Elementor (cabecera, pie y 404) y el tema las imprime mediante el filtro `oldbear_theme_part`. Se renderizan antes de `wp_head` para que su CSS cargue en la cabecera. Si Elementor está desactivado, el tema vuelve a su cabecera y pie en PHP. `wp oldbear studio-demo` y el botón del panel crean las plantillas, la página Diario y la versión Elementor de la política de privacidad. No sobrescriben diseños existentes y desactivan las fuentes y colores por defecto de Elementor para que los widgets nativos hereden el estilo del tema.
 
 ## Contenido y permisos
 
@@ -58,6 +67,7 @@ Shortcodes:
 - `includes/class-content.php`: roadmap, metadatos, permisos y taxonomías.
 - `includes/class-catalog.php`: consultas, caché, REST y render compartido.
 - `includes/widgets.php`: controles, estilos adaptables y render de Elementor.
+- `includes/class-layout.php`: plantillas de cabecera, pie y 404, y soporte de Elementor para juegos.
 - `includes/class-starter.php`: creación de documentos mediante la API de Elementor y datos demo.
 - `includes/class-admin.php`: panel y herramientas protegidas.
 - `assets/`: CSS acotado, JavaScript nativo con integración en el ciclo del editor e ilustraciones propias.

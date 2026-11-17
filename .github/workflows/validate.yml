@@ -49,8 +49,14 @@ jobs:
           assert 'ob-roadmap-lanes' in html
           assert 'Fatal error' not in html
           assert 'name="contact_email"' not in html, 'Form must be disabled before setup'
+          assert 'elementor-widget-oldbear-nav' in html, 'Header must be an Elementor template'
+          assert 'elementor-widget-oldbear-credits' in html, 'Footer must be an Elementor template'
+          assert 'class="site-header"' not in html, 'PHP header fallback must not render'
           PY
-          curl --fail http://localhost:8080/diario/ > /dev/null
+          curl --fail http://localhost:8080/diario/ | grep -q 'elementor-widget-oldbear-journal'
+          test "$(curl -s -o /tmp/oldbear-404.html -w '%{http_code}' http://localhost:8080/fuera-del-mapa/)" = 404
+          grep -q 'Hasta los osos se pierden a veces.' /tmp/oldbear-404.html
+          grep -q 'elementor-widget-heading' /tmp/oldbear-404.html
           curl --fail http://localhost:8080/genero/exploracion/ > /dev/null
           curl --fail http://localhost:8080/plataforma/linux/ > /dev/null
       - name: Package Linux folder and offline preview

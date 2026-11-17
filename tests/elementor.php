@@ -4,8 +4,9 @@ use OldBearStudio\Catalog;
 use OldBearStudio\Content;
 use OldBearStudio\Starter;
 use OldBearStudio\Admin;
+use OldBearStudio\Layout;
 $checks=0;
-$assert=static function($ok,$message) use (&$checks) { if (!$ok) { throw new RuntimeException($message); } $checks++; };
+$assert=static function($ok,$message) use (&$checks) { if (!$ok) { fwrite(STDERR, "Fallo: " . $message . "\n"); throw new RuntimeException($message); } $checks++; };
 $admins=get_users(['role'=>'administrator','number'=>1]);
 wp_set_current_user($admins[0]->ID);
 $assert(defined('ELEMENTOR_VERSION'), 'Elementor debe estar activo.');
@@ -19,8 +20,17 @@ $assert(is_array($data) && count($data) >= 6, 'La portada necesita secciones edi
 $saved_before=get_post_meta($home,'_elementor_data',true);
 $assert(Starter::install(true) === $home, 'Reinstalar no debe duplicar la portada.');
 $assert(get_post_meta($home,'_elementor_data',true) === $saved_before, 'Reinstalar no debe sobrescribir el documento.');
+
+foreach (['header','footer','404','journal'] as $part) { $assert(Layout::id($part) > 0, 'Falta el documento Elementor: '.$part); }
+foreach (['header','footer','404'] as $part) { $assert(get_post_type(Layout::id($part)) === 'elementor_library', 'La parte debe ser una plantilla de Elementor: '.$part); }
+$assert((int) get_option('page_for_posts') === 0, 'El diario debe ser una página Elementor, no la página de entradas.');
+foreach (get_posts(['post_type'=>'page','post_status'=>['publish','draft','private'],'posts_per_page'=>-1]) as $any_page) {
+    $assert(get_post_meta($any_page->ID,'_elementor_edit_mode',true) === 'builder' && json_decode((string) get_post_meta($any_page->ID,'_elementor_data',true),true), 'Página sin diseño Elementor: '.$any_page->post_title);
+}
+$parts_before=Layout::ids();
+$assert(Starter::site() === $parts_before, 'Repetir la preparación no debe duplicar plantillas ni páginas.');
 $widgets=\Elementor\Plugin::$instance->widgets_manager->get_widget_types();
-foreach (['oldbear-hero','oldbear-catalog','oldbear-roadmap','oldbear-contact'] as $name) { $assert(isset($widgets[$name]), 'Widget no registrado: '.$name); }
+foreach (['oldbear-hero','oldbear-catalog','oldbear-roadmap','oldbear-contact','oldbear-journal','oldbear-brand','oldbear-nav','oldbear-social','oldbear-credits'] as $name) { $assert(isset($widgets[$name]), 'Widget no registrado: '.$name); }
 
 $prefix='obtest' . strtolower(wp_generate_password(8,false));
 $ids=[]; $terms=[]; $page=0;
@@ -89,6 +99,10 @@ try {
     $render=\Elementor\Plugin::$instance->frontend->get_builder_content_for_display($page);
     $assert(str_contains($render,'EditableHero') && str_contains($render,'EditableNativeHeading'), 'Los controles personalizados y nativos deben cambiar el render.');
     $assert(!str_contains($render,'<script>alert(1)</script>'), 'El widget debe escapar su contenido.');
+    // Rendering can generate CSS; Elementor then clears rest_api_init for this process, so keep it after the REST checks.
+    $header=\Elementor\Plugin::$instance->frontend->get_builder_content_for_display(Layout::id('header'));
+    $assert(str_contains($header,'id="site-nav"') && str_contains($header,'elementor-widget-oldbear-brand'), 'La cabecera Elementor debe incluir marca y menú.');
+    $assert(str_contains(\Elementor\Plugin::$instance->frontend->get_builder_content_for_display(Layout::id('footer')),'ob-credits'), 'El pie Elementor debe incluir los créditos.');
     $before=get_post_meta($home,'_elementor_data',true);
     Starter::install(true);
     $assert($before === get_post_meta($home,'_elementor_data',true), 'La importación debe conservar ediciones existentes.');

@@ -2,3 +2,18 @@
 @media(max-width:800px){.ob-hero{grid-template-columns:1fr;width:calc(100% - 40px);gap:28px;padding-top:40px}.ob-hero h1{font-size:clamp(3rem,10vw,4.8rem)}.ob-hero figure img{aspect-ratio:1.2;object-position:center 70%}.ob-contact{grid-template-columns:1fr;gap:25px}.ob-roadmap-lanes{grid-template-columns:1fr}.ob-filters{padding:16px}.ob-studio-copy{padding-left:0!important}.ob-studio-emblem img{width:200px}.ob-editor-section .elementor-heading-title{font-size:2.5rem}}
 @media(max-width:540px){.ob-cards{grid-template-columns:1fr}.ob-contact .form-row{grid-template-columns:1fr}.ob-hero h1{font-size:3.3rem}.ob-filters label{flex-basis:100%}}
 @media(prefers-reduced-motion:reduce){.ob-kit *{transition:none!important}}
+/* Site parts built with Elementor (header, footer, 404, inner pages) */
+.ob-part-header{position:sticky;top:0;z-index:30}body.admin-bar .ob-part-header{top:32px}
+.ob-site-header{background:rgba(16,20,18,.96);border-bottom:1px solid #3c493d;position:relative}
+.ob-site-header .elementor-widget-oldbear-nav{width:auto}
+.ob-nav{display:flex;align-items:center;justify-content:flex-end}
+.ob-site-footer{border-top:1px solid #3c493d}
+.ob-footer-top{padding-bottom:44px!important}
+.ob-footer-top .elementor-widget-text-editor p{margin:0;color:#f2eadc;font-size:.9rem;line-height:1.5}.ob-footer-top .elementor-widget-text-editor span{color:#a4aa9f}
+.ob-footer-bottom{border-top:1px solid #3c493d;padding-top:24px!important}.ob-footer-bottom>.elementor-widget-oldbear-credits{width:100%}
+.ob-credits{display:flex;justify-content:space-between;gap:24px;color:#a4aa9f;font-size:.7rem}.ob-credits>div{display:flex;flex-wrap:wrap;gap:10px 24px}
+.ob-editor-hint{font-size:.75rem;color:#a4aa9f;border:1px dashed #3c493d;padding:8px 12px;margin:0}
+.ob-error-section{min-height:65vh}.ob-error-section .elementor-heading-title,.ob-journal-page h1.elementor-heading-title,.ob-legal h1.elementor-heading-title{font-size:clamp(2.6rem,5vw,5rem)!important}
+.ob-legal>.e-con-inner{max-width:800px!important}.ob-legal .elementor-widget-text-editor{color:#f2eadc}.ob-legal .elementor-widget-text-editor h2{font-size:2rem;margin-top:2em}
+.ob-journal-panel .elementor-widget-button{margin-top:28px}.ob-journal .journal-grid{margin-top:24px}.ob-journal .ob-pagination{margin-top:40px}
+@media(max-width:800px){body.admin-bar .ob-part-header{top:46px}.has-js .ob-nav #site-nav.is-open{position:absolute;left:0;right:0;top:100%;background:#101412;border-bottom:1px solid #3c493d;padding:8px 20px 14px}.ob-credits{flex-direction:column;gap:14px}}

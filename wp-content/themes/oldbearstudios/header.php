@@ -9,6 +9,10 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
+<?php $oldbear_header = (string) apply_filters('oldbear_theme_part', '', 'header'); ?>
+<?php if ($oldbear_header !== '') : ?>
+<div class="ob-part ob-part-header"><?php echo $oldbear_header; // Elementor template output. ?></div>
+<?php else : ?>
 <header class="site-header">
     <div class="shell header-inner">
         <?php oldbear_brand(); ?>
@@ -18,4 +22,4 @@
         </nav>
     </div>
 </header>
-
+<?php endif; ?>

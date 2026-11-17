@@ -21,6 +21,9 @@ final class Admin {
         if ($action === 'landing') {
             $result = Starter::install(false);
             if (is_wp_error($result)) { wp_die(esc_html($result->get_error_message())); }
+        } elseif ($action === 'site') {
+            $result = Starter::site();
+            if (is_wp_error($result)) { wp_die(esc_html($result->get_error_message())); }
         } elseif ($action === 'demo') {
             Starter::seed();
         } elseif ($action === 'remove-demo') {
@@ -45,14 +48,22 @@ final class Admin {
         if ($home && current_user_can('edit_post', $home)) {
             echo '<p><a class="button button-primary" href="' . esc_url(admin_url('post.php?post=' . $home . '&action=elementor')) . '">Editar landing con Elementor</a> <a class="button" href="' . esc_url(get_permalink($home)) . '">Ver landing</a></p>';
         }
+        $labels = Layout::PARTS + ['journal'=>'Página Diario','privacy'=>'Política de privacidad'];
+        $parts = '';
+        foreach (Layout::ids() as $key=>$id) {
+            if (!isset($labels[$key]) || !get_post($id) || get_post_status($id) === 'trash' || !current_user_can('edit_post', $id)) { continue; }
+            $parts .= '<a class="button" href="' . esc_url(admin_url('post.php?post=' . $id . '&action=elementor')) . '">Editar ' . esc_html(mb_strtolower($labels[$key])) . '</a> ';
+        }
+        if ($parts !== '') { echo '<h2>Todo el sitio en Elementor</h2><p>Cabecera, pie y 404 son plantillas de Elementor (Plantillas → Plantillas guardadas) que el tema muestra en todas las páginas. Los enlaces del menú se gestionan en Apariencia → Menús.</p><p>' . $parts . '</p>'; }
         echo '<h2>Conexiones y estado</h2><ul><li>Elementor: ' . (defined('ELEMENTOR_VERSION') ? esc_html(ELEMENTOR_VERSION) : 'no está activo; catálogo y roadmap funcionan mediante shortcodes') . '</li><li>Contacto: ' . (oldbear_contact_ready() ? 'activado' : 'pendiente de destinatario, política y activación en Ajustes → Generales') . '</li></ul>';
         echo '<h2>Cómo mostrar el plugin</h2><ol><li>Filtra el catálogo por género y plataforma, busca un título y prueba una búsqueda sin resultados.</li><li>Edita un juego, sus taxonomías o un hito: el catálogo invalida su caché y el roadmap refleja el progreso real.</li><li>En Elementor busca la categoría OldBear Studio y arrastra sus cuatro widgets a cualquier página.</li></ol>';
         if (current_user_can('manage_options')) {
             echo '<h2>Preparación y contenido de demostración</h2><p>La demo está marcada como muestra. Retirarla mueve únicamente los registros identificados como demo a la papelera. La creación de la landing es idempotente y no sobrescribe diseños existentes.</p>';
             self::action('landing', 'Preparar landing Elementor');
+            self::action('site', 'Preparar cabecera, pie, 404, diario y privacidad con Elementor');
             self::action('demo', 'Cargar demo identificada');
             self::action('remove-demo', 'Retirar demo a la papelera');
         }
-        echo '<h2>Shortcodes</h2><p><code>[oldbear_games per_page="6"]</code> · <code>[oldbear_roadmap]</code> · <code>[oldbear_contact]</code></p><p>El diseño de la landing se edita en Elementor. La identidad y navegación del tema se editan desde Apariencia.</p></div>';
+        echo '<h2>Shortcodes</h2><p><code>[oldbear_games per_page="6"]</code> · <code>[oldbear_roadmap]</code> · <code>[oldbear_contact]</code></p><p>Todas las páginas, la cabecera y el pie se editan en Elementor. El logotipo, el nombre y los menús se gestionan desde Apariencia.</p></div>';
     }
 }

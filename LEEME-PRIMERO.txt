@@ -12,8 +12,9 @@ Panel: http://localhost:8080/wp-admin/
 Correo de pruebas: http://localhost:8025/
 
 En el panel abre OldBear Studio y pulsa Editar landing con Elementor.
-El plugin añade catálogo con búsqueda y filtros, roadmap de desarrollo y
-cuatro widgets propios de Elementor. La demo está marcada como muestra.
+Todas las páginas, la cabecera, el pie y la página 404 se editan con
+Elementor. El plugin añade catálogo con búsqueda y filtros, roadmap de
+desarrollo y widgets propios de Elementor. La demo está marcada como muestra.
 Puedes retirarla desde el panel, conservando tus proyectos reales.
 
 Iniciar.sh abre la instalación. Detener.sh la para y conserva datos.

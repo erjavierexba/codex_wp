@@ -10,7 +10,8 @@ $assert(function_exists('oldbear_process_contact'), 'El plugin no está activo.'
 $assert(post_type_exists('oldbear_game'), 'Falta el tipo Juegos.');
 $assert(get_post_type_object('oldbear_game')->show_in_rest, 'Juegos debe admitir Gutenberg.');
 $assert(get_post_status((int) get_option('page_on_front')) === 'publish', 'Falta la portada.');
-$assert(get_post_status((int) get_option('page_for_posts')) === 'publish', 'Falta el diario.');
+$journal = get_page_by_path('diario');
+$assert($journal && $journal->post_status === 'publish', 'Falta la página Diario.');
 $config = json_decode(file_get_contents(get_theme_file_path('theme.json')), true, 512, JSON_THROW_ON_ERROR);
 $assert($config['version'] === 3, 'theme.json no es válido.');
 $assert(is_wp_error(oldbear_validate_contact(['name'=>[],'email'=>'x','message'=>'test','consent'=>'1'])), 'Debe rechazar arrays.');

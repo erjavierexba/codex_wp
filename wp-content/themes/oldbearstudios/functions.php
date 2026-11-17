@@ -22,16 +22,11 @@ function oldbear_assets() {
 }
 add_action('wp_enqueue_scripts', 'oldbear_assets');
 
+/** Page content lives in Elementor; the Customizer keeps site-wide data only. */
 function oldbear_defaults() {
     return [
-        'eyebrow'=>'ESTUDIO INDEPENDIENTE DE VIDEOJUEGOS',
-        'hero_title'=>'Pequeño estudio. Grandes aventuras.',
         'hero_text'=>'Creamos mundos a los que apetece volver. Juegos con carácter, hechos con curiosidad, mimo y un punto de instinto.',
-        'studio_title'=>'El instinto de crear. La paciencia de un oso.',
-        'studio_text'=>'OldBearStudios nace de una idea sencilla: hacer los juegos que nos gustaría descubrir. Explorar una mecánica hasta encontrar la chispa, dar personalidad a cada mundo y cuidar esos pequeños detalles que se quedan contigo.',
-        'studio_note'=>'Nos mueve lo que ocurre al otro lado de la pantalla: una decisión difícil, un descubrimiento inesperado y las ganas de jugar una vez más.',
-        'contact_text'=>'¿Tienes una idea, quieres colaborar o simplemente saludar? Aquí empieza la conversación.',
-        'public_email'=>'','steam_url'=>'','itch_url'=>'','discord_url'=>'','trailer_url'=>''
+        'steam_url'=>'','itch_url'=>'','discord_url'=>''
     ];
 }
 function oldbear_text($key) {
@@ -41,19 +36,15 @@ function oldbear_text($key) {
 function oldbear_customize($customizer) {
     $customizer->add_section('oldbear', ['title'=>__('OldBearStudios', 'oldbearstudios'),'priority'=>30]);
     $labels = [
-        'eyebrow'=>'Etiqueta del estudio','hero_title'=>'Titular principal','hero_text'=>'Introducción',
-        'studio_title'=>'Titular del estudio','studio_text'=>'Sobre el estudio','studio_note'=>'Nuestra visión',
-        'contact_text'=>'Introducción de contacto','public_email'=>'Correo público (opcional)',
-        'steam_url'=>'URL de Steam (opcional)','itch_url'=>'URL de itch.io (opcional)',
-        'discord_url'=>'URL de Discord (opcional)','trailer_url'=>'URL del tráiler (opcional)'
+        'hero_text'=>'Descripción del sitio (buscadores y redes)',
+        'steam_url'=>'URL de Steam (opcional)','itch_url'=>'URL de itch.io (opcional)','discord_url'=>'URL de Discord (opcional)'
     ];
     foreach (oldbear_defaults() as $key=>$default) {
         $is_url = str_ends_with($key, '_url');
-        $is_email = $key === 'public_email';
-        $sanitize = $is_url ? 'esc_url_raw' : ($is_email ? 'sanitize_email' : 'sanitize_textarea_field');
+        $sanitize = $is_url ? 'esc_url_raw' : 'sanitize_textarea_field';
         $id = 'oldbear_' . $key;
         $customizer->add_setting($id, ['default'=>$default,'sanitize_callback'=>$sanitize,'transport'=>'refresh']);
-        $customizer->add_control($id, ['section'=>'oldbear','label'=>$labels[$key], 'type'=>$is_url ? 'url' : ($is_email ? 'email' : 'textarea')]);
+        $customizer->add_control($id, ['section'=>'oldbear','label'=>$labels[$key], 'type'=>$is_url ? 'url' : 'textarea']);
     }
 }
 add_action('customize_register', 'oldbear_customize');

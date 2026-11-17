@@ -9,10 +9,12 @@ final class Kit {
         require_once __DIR__ . '/class-catalog.php';
         require_once __DIR__ . '/class-admin.php';
         require_once __DIR__ . '/class-starter.php';
+        require_once __DIR__ . '/class-layout.php';
         add_filter('elementor/frontend/print_google_fonts', '__return_false');
         Content::boot();
         Catalog::boot();
         Admin::boot();
+        Layout::boot();
         add_action('init', [self::class, 'assets'], 5);
         add_action('wp_enqueue_scripts', [self::class, 'enqueue']);
         add_action('elementor/elements/categories_registered', static function($manager) {
@@ -20,7 +22,7 @@ final class Kit {
         });
         add_action('elementor/widgets/register', static function($manager) {
             require_once __DIR__ . '/widgets.php';
-            foreach ([Hero_Widget::class, Catalog_Widget::class, Roadmap_Widget::class, Contact_Widget::class] as $class) {
+            foreach ([Hero_Widget::class, Catalog_Widget::class, Roadmap_Widget::class, Contact_Widget::class, Journal_Widget::class, Brand_Widget::class, Nav_Widget::class, Social_Widget::class, Credits_Widget::class] as $class) {
                 $manager->register(new $class());
             }
         });
@@ -33,7 +35,9 @@ final class Kit {
                 wp_set_current_user($admin[0]->ID);
                 $result = Starter::install(true);
                 if (is_wp_error($result)) { \WP_CLI::error($result->get_error_message()); }
-                \WP_CLI::success('Portada Elementor preparada: ' . $result);
+                $site = Starter::site();
+                if (is_wp_error($site)) { \WP_CLI::error($site->get_error_message()); }
+                \WP_CLI::success('Portada Elementor preparada: ' . $result . '. Cabecera, pie, 404, diario y privacidad con Elementor: ' . wp_json_encode($site));
             });
         }
     }
@@ -42,11 +46,15 @@ final class Kit {
         wp_register_script('oldbear-studio-kit', plugins_url('assets/catalog.js', dirname(__DIR__) . '/oldbear-studio.php'), [], self::VERSION, ['strategy'=>'defer','in_footer'=>true]);
     }
     public static function enqueue(): void {
+        if (did_action('elementor/loaded')) { wp_enqueue_style('oldbear-studio-kit'); }
         $post = get_post();
         if (is_front_page() || ($post && (get_post_meta($post->ID, '_elementor_edit_mode', true) || has_shortcode($post->post_content, 'oldbear_games') || has_shortcode($post->post_content, 'oldbear_roadmap') || has_shortcode($post->post_content, 'oldbear_contact')))) {
             wp_enqueue_style('oldbear-studio-kit');
             wp_enqueue_script('oldbear-studio-kit');
         }
+    }
+    public static function arrow(): string {
+        return '<svg class="arrow-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     }
     public static function art(string $key = 'forest'): string {
         $files = ['forest'=>'world-forest.svg','dunes'=>'world-dunes.svg','hero'=>'wilderness.svg','logo'=>'bear-mark.svg'];

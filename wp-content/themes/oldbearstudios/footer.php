@@ -1,4 +1,8 @@
 <?php if (!defined('ABSPATH')) { exit; } ?>
+<?php $oldbear_footer = (string) apply_filters('oldbear_theme_part', '', 'footer'); ?>
+<?php if ($oldbear_footer !== '') : ?>
+<div class="ob-part ob-part-footer"><?php echo $oldbear_footer; // Elementor template output. ?></div>
+<?php else : ?>
 <footer class="site-footer">
     <div class="shell footer-top">
         <?php oldbear_brand(); ?>
@@ -14,6 +18,7 @@
         <div><?php if (get_privacy_policy_url()) : ?><a href="<?php echo esc_url(get_privacy_policy_url()); ?>">Privacidad</a><?php endif; ?> <a href="#contenido">Volver arriba ↑</a></div>
     </div>
 </footer>
+<?php endif; ?>
 <?php wp_footer(); ?>
 </body>
 </html>
