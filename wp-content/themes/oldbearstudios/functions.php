@@ -70,8 +70,8 @@ function oldbear_brand() {
 function oldbear_link($section) { return home_url('/#' . $section); }
 function oldbear_fallback_menu() {
     echo '<ul class="menu">';
-    foreach (['juegos'=>'Juegos','estudio'=>'El estudio','diario'=>'Diario','contacto'=>'Hablemos ↗'] as $id=>$label) {
-        echo '<li><a href="' . esc_url(oldbear_link($id)) . '">' . esc_html($label) . '</a></li>';
+    foreach (['juegos'=>'Juegos','estudio'=>'El estudio','diario'=>'Diario','contacto'=>'Hablemos'] as $id=>$label) {
+        echo '<li><a href="' . esc_url(oldbear_link($id)) . '">' . esc_html($label) . ($id === 'contacto' ? ' ' . oldbear_arrow_icon() : '') . '</a></li>';
     }
     echo '</ul>';
 }
@@ -89,3 +89,8 @@ function oldbear_meta() {
 }
 add_action('wp_head', 'oldbear_meta', 1);
 
+
+/** Vector icon avoids missing arrow glyphs on Linux system fonts. */
+function oldbear_arrow_icon() {
+    return '<svg class="arrow-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}

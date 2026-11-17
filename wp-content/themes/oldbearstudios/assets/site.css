@@ -7,3 +7,5 @@
 @media(max-width:360px){.hero h1{font-size:2.9rem}.manifesto-strip span{font-size:.48rem}.manifesto-strip b{font-size:.8rem}.shell{width:calc(100% - 32px)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 
+
+.arrow-icon{display:inline-block;vertical-align:-.18em;flex:0 0 auto;width:1.1em;height:1.1em}

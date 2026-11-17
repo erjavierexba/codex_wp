@@ -5,7 +5,7 @@
         <p>Hecho con instinto.<br><span>Jugado con el corazón.</span></p>
         <div class="social-links">
         <?php foreach (['steam_url'=>'Steam','itch_url'=>'itch.io','discord_url'=>'Discord'] as $key=>$label) : if (oldbear_text($key)) : ?>
-            <a href="<?php echo esc_url(oldbear_text($key)); ?>"><?php echo esc_html($label); ?> <span aria-hidden="true">↗</span></a>
+            <a href="<?php echo esc_url(oldbear_text($key)); ?>"><?php echo esc_html($label); ?> <span aria-hidden="true"><?php echo oldbear_arrow_icon(); ?></span></a>
         <?php endif; endforeach; ?>
         </div>
     </div>

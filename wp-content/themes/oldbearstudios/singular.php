@@ -9,7 +9,7 @@
     <?php if (has_post_thumbnail()) { the_post_thumbnail('large', ['class'=>'article-cover']); } ?>
     <div class="entry-content"><?php the_content(); ?></div>
     <?php wp_link_pages(); ?>
-    <?php if (is_singular('oldbear_game')) : $store_url = get_post_meta(get_the_ID(), 'oldbear_store_url', true); if ($store_url) : ?><a class="button" href="<?php echo esc_url($store_url); ?>">Ver en la tienda ↗</a><?php endif; endif; ?>
+    <?php if (is_singular('oldbear_game')) : $store_url = get_post_meta(get_the_ID(), 'oldbear_store_url', true); if ($store_url) : ?><a class="button" href="<?php echo esc_url($store_url); ?>">Ver en la tienda <?php echo oldbear_arrow_icon(); ?></a><?php endif; endif; ?>
 </article>
 <?php endwhile; ?>
 </main>
