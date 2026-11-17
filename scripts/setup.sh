@@ -6,10 +6,10 @@ docker compose config --quiet
 docker compose up -d db wordpress mailpit
 ready=0
 for attempt in $(seq 1 30); do
-  if docker compose run --rm cli core version >/dev/null 2>&1; then ready=1; break; fi
+  if docker compose run --rm cli wp core version >/dev/null 2>&1; then ready=1; break; fi
   sleep 2
 done
-test "$ready" = 1 || { echo 'WordPress no está listo. Revisa docker compose logs.' >&2; exit 1; }
+test "$ready" = 1 || { docker compose run --rm cli wp core version; echo 'WordPress no está listo. Revisa docker compose logs.' >&2; exit 1; }
 docker compose run --rm --entrypoint sh cli -c '
 set -eu
 if ! wp core is-installed >/dev/null 2>&1; then
