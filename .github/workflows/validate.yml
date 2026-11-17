@@ -11,9 +11,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Check JS, JSON and SVG
+      - name: Check JS, JSON, SVG and Linux shell
         run: |
           node --check wp-content/themes/oldbearstudios/assets/site.js
+          find . -name '*.sh' -not -path './.git/*' -exec bash -n {} +
           python3 - <<'PY'
           import json, pathlib, xml.etree.ElementTree as ET
           theme = pathlib.Path('wp-content/themes/oldbearstudios')
@@ -21,23 +22,10 @@ jobs:
           for asset in theme.glob('assets/*.svg'):
               ET.parse(asset)
           PY
-      - name: Configure isolated local environment
-        run: |
-          python3 - <<'PY'
-          import pathlib, secrets
-          data = pathlib.Path('.env.example').read_text()
-          replacements = {
-              'change-this-database-password': secrets.token_urlsafe(24),
-              'change-this-root-password': secrets.token_urlsafe(24),
-              'change-this-admin-password': secrets.token_urlsafe(24),
-              'you@example.com': 'integration@example.org',
-          }
-          for old, new in replacements.items():
-              data = data.replace(old, new)
-          pathlib.Path('.env').write_text(data)
-          PY
-      - name: Install WordPress
-        run: bash scripts/setup.sh
+      - name: Test Linux installer and uninstaller safeguards
+        run: python3 -m unittest discover -s tests -p test_linux.py -v
+      - name: Install full Linux package
+        run: OLDBEAR_NO_OPEN=1 bash Instalar.sh
       - name: Validate PHP and WordPress behavior
         run: bash scripts/check.sh
       - name: Check HTTP pages
@@ -52,20 +40,20 @@ jobs:
           assert 'name="contact_email"' not in html, 'Form must be disabled before setup'
           PY
           curl --fail http://localhost:8080/diario/ > /dev/null
-      - name: Package installable theme and plugin
-        run: |
-          mkdir -p dist
-          cd wp-content/themes
-          zip -qr ../../dist/oldbearstudios-theme.zip oldbearstudios
-          cd ../plugins
-          zip -qr ../../dist/oldbear-studio-plugin.zip oldbear-studio
+      - name: Package Linux folder and offline preview
+        run: python3 scripts/package.py --snapshot /tmp/oldbear-home.html
+      - name: Test real stop, restart, reinstall and uninstall
+        run: bash tests/lifecycle.sh
       - uses: actions/upload-artifact@v4
         with:
           name: oldbearstudios-wordpress
           path: dist/*.zip
       - name: Diagnostic logs
         if: failure()
-        run: docker compose logs --tail=80 wordpress db
+        run: |
+          if test -f .env; then bash Diagnostico.sh; fi
       - name: Stop local services
         if: always()
-        run: docker compose down
+        run: |
+          if test -f .env; then bash Detener.sh; fi
+

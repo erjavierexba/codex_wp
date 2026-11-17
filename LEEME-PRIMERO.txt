@@ -1,0 +1,58 @@
+OLD BEAR STUDIOS — PAQUETE PARA LINUX
+
+1. Extrae TODO el ZIP en una carpeta de tu equipo.
+2. Abre esa carpeta en un terminal.
+3. Escribe: bash Instalar.sh
+
+La primera vez necesita Internet. En Ubuntu 24.04 y derivados prepara Docker
+si falta; Linux puede pedirte la contraseña de administrador. En otras
+distribuciones instala Docker Engine y Compose v2 antes de empezar.
+
+WordPress, PHP 8.3, Apache, MariaDB (compatible con MySQL) y el correo de
+prueba se preparan automáticamente. No necesitas configurar contraseñas.
+El usuario y la clave del panel se guardan en ACCESO.txt, con acceso privado.
+
+Web: http://localhost:8080/
+Panel: http://localhost:8080/wp-admin/
+Correo de prueba: http://localhost:8025/
+
+Vista-previa.html permite enseñar el diseño sin instalar nada. Es una
+captura HTML de la portada: la administración y el formulario forman parte
+de la instalación WordPress, no de esa vista previa.
+
+PARA CADA DÍA
+  bash Iniciar.sh       Inicia los servicios y abre la web.
+  bash Detener.sh       Detiene todo y conserva los datos.
+  bash Diagnostico.sh   Muestra el estado y los últimos errores.
+  bash Desinstalar.sh   Elige entre conservar datos o borrarlos.
+
+DÓNDE ESTÁ CADA COSA
+  data/wordpress/  WordPress, imágenes subidas, plugins y configuración.
+  data/mysql/      Base de datos.
+  wp-content/     Tema OldBearStudios y plugin del estudio.
+  ACCESO.txt      Usuario y contraseña generados para ti.
+  .env            Claves y puertos locales.
+
+Con Detener.sh puedes mover la carpeta a otra ubicación del mismo equipo
+y después ejecutar Iniciar.sh. Para llevarla a otro ordenador o hacer una
+copia de seguridad, detén los servicios y copia la carpeta completa,
+incluidos .env y data/. Conserva permisos y propietario: algunos archivos
+de data/ pertenecen a los contenedores y pueden requerir sudo para copiarlos.
+Puedes cambiar puertos en .env; cambia también WP_URL y ejecuta Instalar.sh.
+La vista local está accesible únicamente desde este ordenador.
+
+Desinstalar.sh solo gestiona esta instalación. Conservar datos elimina los
+contenedores y permite recuperarlos con Iniciar.sh. Borrarlos requiere
+escribir BORRAR OLDBEAR y elimina web, base de datos y claves.
+Docker y las imágenes de servicios permanecen en el sistema porque pueden
+usarlos otras aplicaciones. Las imágenes se almacenan en la caché de Docker;
+los datos de tu web sí están dentro de esta carpeta. Los servicios no se
+arrancan automáticamente al reiniciar Linux.
+
+En el panel: Apariencia > Personalizar para los textos y enlaces del estudio;
+Juegos para añadir proyectos; Entradas para el diario. El formulario se
+activa en Ajustes > Generales después de publicar tu política de privacidad
+y configurar el destinatario. Mailpit captura los correos de desarrollo.
+
+Para publicar en Internet consulta README.md: instala el tema y el plugin
+en tu hosting y configura correo real y textos legales.

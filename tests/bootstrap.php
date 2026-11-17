@@ -27,3 +27,4 @@ if ($url) { update_option('home', esc_url_raw($url)); update_option('siteurl', e
 update_option('permalink_structure', '/%postname%/');
 flush_rewrite_rules();
 WP_CLI::success('Tema, plugin y páginas preparados. Privacidad y formulario requieren configuración.');
+

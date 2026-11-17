@@ -195,3 +195,4 @@ function oldbear_local_mail($mailer) {
     $mailer->SMTPSecure = '';
 }
 add_action('phpmailer_init', 'oldbear_local_mail');
+

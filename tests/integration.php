@@ -69,3 +69,4 @@ try {
     }
 }
 WP_CLI::success($checks . ' comprobaciones correctas. No se ha enviado correo real.');
+

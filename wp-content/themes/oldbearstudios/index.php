@@ -6,3 +6,4 @@
     <?php else : ?><p>Este espacio está preparando su primera historia. Vuelve pronto.</p><a class="button" href="<?php echo esc_url(home_url('/')); ?>">Volver al inicio ↗</a><?php endif; ?>
 </main>
 <?php get_footer(); ?>
+

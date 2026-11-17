@@ -7,3 +7,10 @@
 /node_modules/
 /dist/
 /backups/
+/data/
+/ACCESO.txt
+/preview/
+/Vista-previa.html
+/preview-assets/
+__pycache__/
+

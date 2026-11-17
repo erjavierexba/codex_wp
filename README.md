@@ -4,15 +4,30 @@ Landing en español para un estudio de videojuegos. Tema propio, sin Elementor, 
 
 ## Arrancar en local
 
-Necesitas Docker con Compose y un terminal Bash.
+Descarga y extrae **OldBearStudios-Linux.zip** o clona este repositorio. Abre un terminal en la carpeta y ejecuta:
 
-1. Clona este repositorio y entra en él.
-2. Copia `.env.example` a `.env` y cambia las contraseñas, el usuario y el correo.
-3. Ejecuta `bash scripts/setup.sh`.
-4. Abre http://localhost:8080 y http://localhost:8080/wp-admin/.
-5. El correo de desarrollo se recibe en http://localhost:8025 (Mailpit; nunca se envía a Internet).
+```bash
+bash Instalar.sh
+```
 
-`docker compose up -d` reinicia una instalación ya configurada. `docker compose down` conserva los datos. No uses `down -v` si quieres conservarlos. Los puertos están limitados a 127.0.0.1; esta configuración es para desarrollo, no para exponerla a Internet.
+El instalador prepara Docker y Compose v2 si faltan en Ubuntu 24.04 y derivados. En otras distribuciones Linux, instala esos dos requisitos primero. La primera instalación necesita Internet y puede pedir permisos de administrador para Docker. PHP, Apache, WordPress y MariaDB se ejecutan en contenedores.
+
+Las contraseñas se generan automáticamente. Encontrarás los datos de acceso en **ACCESO.txt** (solo legible por tu usuario). La web se abre en http://localhost:8080; el panel está en http://localhost:8080/wp-admin/ y el correo de desarrollo, capturado por Mailpit, en http://localhost:8025.
+
+| Archivo | Función |
+| --- | --- |
+| `Instalar.sh` | Prepara requisitos, claves, servicios y WordPress. Se puede repetir. |
+| `Iniciar.sh` | Inicia la instalación existente y abre la web. |
+| `Detener.sh` | Detiene todos los servicios y conserva los datos. |
+| `Desinstalar.sh` | Elimina contenedores; permite conservar o borrar los datos. |
+| `Diagnostico.sh` | Muestra estado y registros. |
+| `Vista-previa.html` | Vista estática de la portada, incluida en el ZIP generado, para abrir sin instalación. |
+
+La web, los archivos subidos y la base de datos viven en **data/wordpress/** y **data/mysql/**, dentro de la misma carpeta. Detén los servicios antes de moverla o copiarla. Para una copia completa incluye `data/`, `.env` y `ACCESO.txt`; algunos archivos de datos requieren permisos de administrador. Las claves y datos están excluidos del repositorio y del ZIP de distribución.
+
+El borrado completo exige escribir **BORRAR OLDBEAR**. El desinstalador solo elimina los contenedores y datos de esta instalación. Docker y las imágenes descargadas son recursos compartidos del sistema y se conservan. Los servicios no arrancan automáticamente al reiniciar Linux.
+
+Los puertos están limitados a 127.0.0.1: este paquete es para desarrollo local. Para usar otros puertos en la primera instalación: `OLDBEAR_WEB_PORT=8081 OLDBEAR_MAIL_PORT=8026 bash Instalar.sh`. En una instalación existente cambia los puertos y `WP_URL` en `.env` y repite el instalador. No arranques simultáneamente una copia de una instalación sin cambiar su `COMPOSE_PROJECT_NAME` y sus puertos.
 
 ## Editar el sitio
 
@@ -50,7 +65,11 @@ El paquete no carga analítica ni servicios de terceros. Si añades embeds, mark
 
 `bash scripts/check.sh` ejecuta sintaxis PHP y una comprobación integrada de WordPress en la instalación local. La prueba comprueba el tema, el tipo de contenido, las páginas esenciales, el saneamiento de los ajustes y los rechazos de contacto. No envía correos ni publica contenido de muestra.
 
-El flujo de GitHub Actions realiza estas mismas comprobaciones y empaqueta tema y plugin por separado. No despliega el sitio.
+Las pruebas de Linux se ejecutan con `python3 -m unittest discover -s tests -p test_linux.py -v`. Comprueban claves privadas, reinstalación, rutas con espacios y apóstrofos, preservación de datos y confirmación de borrado.
+
+GitHub Actions comprueba además el ciclo completo con Docker real: instalación, reinicio, reinstalación sin duplicar páginas y desinstalación con borrado en un entorno de prueba nuevo. Empaqueta la carpeta Linux, tema y plugin por separado, incluyendo una vista HTML exportada de WordPress. No despliega el sitio.
+
+Para regenerar los ZIP: `python3 scripts/package.py`. Con una captura de la portada puedes añadir `--snapshot /ruta/portada.html --site-url http://localhost:8080` mientras el WordPress local está disponible. La vista estática incluye recursos locales; no ofrece administración ni envía formularios.
 
 ## Estructura
 
@@ -60,3 +79,4 @@ El flujo de GitHub Actions realiza estas mismas comprobaciones y empaqueta tema 
 - `tests/`: comprobación de integración por WP-CLI.
 
 Código e ilustraciones originales del paquete: GPL-2.0-or-later. Sustituye los conceptos visuales si ya tienes identidad y arte propios.
+

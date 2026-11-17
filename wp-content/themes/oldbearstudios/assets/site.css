@@ -6,3 +6,4 @@
 @media(max-width:540px){.game-grid,.principle-grid{grid-template-columns:1fr}.game-grid{gap:38px}.game-art{aspect-ratio:1.4}.hero h1{font-size:3.4rem}.hero-art{border-top-left-radius:85px}.section h2{font-size:2.5rem}.principle-grid article{padding-top:20px}.principle-grid h3{font-size:1.5rem;margin-top:12px}.footer-top{grid-template-columns:1fr}.footer-top>p{justify-self:start}.social-links{grid-column:auto}.footer-bottom{flex-direction:column;gap:14px}.journal-empty{align-items:flex-start}.journal-empty>span{font-size:2rem}.form-row{grid-template-columns:1fr}.button-row{gap:20px}.hero-description{font-size:1rem}.contact-email{font-size:1.1rem}}
 @media(max-width:360px){.hero h1{font-size:2.9rem}.manifesto-strip span{font-size:.48rem}.manifesto-strip b{font-size:.8rem}.shell{width:calc(100% - 32px)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+

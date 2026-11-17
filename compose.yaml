@@ -1,14 +1,14 @@
 services:
   db:
     image: mariadb:11.4
-    restart: unless-stopped
+    restart: "no"
     environment:
       MARIADB_DATABASE: ${DB_NAME:?Set DB_NAME in .env}
       MARIADB_USER: ${DB_USER:?Set DB_USER in .env}
       MARIADB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD in .env}
     volumes:
-      - db_data:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
@@ -16,7 +16,7 @@ services:
       retries: 30
   wordpress:
     image: wordpress:php8.3-apache
-    restart: unless-stopped
+    restart: "no"
     depends_on:
       db:
         condition: service_healthy
@@ -29,7 +29,7 @@ services:
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
       OLDBEAR_SMTP_HOST: mailpit
     volumes: &wp_volumes
-      - wordpress_data:/var/www/html
+      - ./data/wordpress:/var/www/html
       - ./wp-content/themes/oldbearstudios:/var/www/html/wp-content/themes/oldbearstudios:ro
       - ./wp-content/plugins/oldbear-studio:/var/www/html/wp-content/plugins/oldbear-studio:ro
       - ./tests:/opt/oldbear-tests:ro
@@ -49,9 +49,7 @@ services:
     volumes: *wp_volumes
   mailpit:
     image: axllent/mailpit:v1.27.0
-    restart: unless-stopped
+    restart: "no"
     ports:
       - "127.0.0.1:${MAIL_PORT:-8025}:8025"
-volumes:
-  db_data:
-  wordpress_data:
+

@@ -18,3 +18,4 @@
     const status = document.getElementById('oldbear-contact-status');
     if (status) { status.focus({preventScroll: true}); }
 })();
+

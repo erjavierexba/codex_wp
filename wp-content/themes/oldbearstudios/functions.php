@@ -88,3 +88,4 @@ function oldbear_meta() {
     if (is_singular() && has_post_thumbnail()) { echo '<meta property="og:image" content="' . esc_url(get_the_post_thumbnail_url(null, 'large')) . '">' . "\n"; }
 }
 add_action('wp_head', 'oldbear_meta', 1);
+
