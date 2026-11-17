@@ -36,7 +36,7 @@
         });
     });
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => init()); else init();
-    window.addEventListener('elementor/frontend/init', () => {
-        window.elementorFrontend?.hooks.addAction('frontend/element_ready/oldbear-catalog.default', scope => init(scope[0]));
-    });
+    const connectEditor = () => window.elementorFrontend?.hooks.addAction('frontend/element_ready/oldbear-catalog.default', scope => init(scope[0]));
+    if (window.elementorFrontend?.hooks) connectEditor();
+    else if (window.jQuery) window.jQuery(window).on('elementor/frontend/init', connectEditor);
 })();

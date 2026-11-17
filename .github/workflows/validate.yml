@@ -31,6 +31,11 @@ jobs:
         run: bash scripts/check.sh
       - name: Validate Elementor and Studio Kit
         run: docker compose run --rm cli wp eval-file /opt/oldbear-tests/elementor.php
+      - name: Check plugin without Elementor or theme
+        run: |
+          docker compose run --rm cli wp plugin deactivate elementor
+          docker compose run --rm cli wp --skip-themes eval-file /opt/oldbear-tests/standalone.php
+          docker compose run --rm cli wp plugin activate elementor
       - name: Check HTTP pages
         run: |
           curl --fail --retry 10 --retry-delay 2 --retry-connrefused http://localhost:8080/ > /tmp/oldbear-home.html

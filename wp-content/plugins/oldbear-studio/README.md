@@ -60,7 +60,7 @@ Shortcodes:
 - `includes/widgets.php`: controles, estilos adaptables y render de Elementor.
 - `includes/class-starter.php`: creación de documentos mediante la API de Elementor y datos demo.
 - `includes/class-admin.php`: panel y herramientas protegidas.
-- `assets/`: CSS acotado, JavaScript sin librerías e ilustraciones propias.
+- `assets/`: CSS acotado, JavaScript nativo con integración en el ciclo del editor e ilustraciones propias.
 
 La lógica de negocio vive en el plugin, separada del tema. No se borran juegos, hitos, ajustes ni documentos al desactivar o eliminar el plugin. Se conservan para recuperación; puedes retirar previamente la demo a la papelera. El contacto mantiene la validación, consentimiento, nonce, campo trampa y límites de envío de la versión anterior. En producción configura SMTP y privacidad.
 

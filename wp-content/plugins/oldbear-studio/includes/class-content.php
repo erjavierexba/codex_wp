@@ -26,7 +26,7 @@ final class Content {
         ]);
         foreach ([
             'ob_stage'=>['type'=>'string','default'=>'planned','sanitize_callback'=>[self::class,'stage']],
-            'ob_game_id'=>['type'=>'integer','default'=>0,'sanitize_callback'=>'absint']
+            'ob_game_id'=>['type'=>'integer','default'=>0,'sanitize_callback'=>[self::class,'game']]
         ] as $key=>$args) {
             register_post_meta('ob_milestone', $key, $args + [
                 'single'=>true,'show_in_rest'=>true,
@@ -34,6 +34,7 @@ final class Content {
             ]);
         }
     }
+    public static function game($value): int { $id=absint($value); return get_post_type($id) === 'oldbear_game' ? $id : 0; }
     public static function stage($value): string {
         return is_string($value) && isset(self::STAGES[$value]) ? $value : 'planned';
     }

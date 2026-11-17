@@ -15,7 +15,7 @@ abstract class Studio_Widget extends \Elementor\Widget_Base {
         $this->end_controls_section();
         $this->start_controls_section('appearance', ['label'=>'Diseño','tab'=>Controls::TAB_STYLE]);
         $this->add_control('accent', ['label'=>'Color de acento','type'=>Controls::COLOR,'selectors'=>['{{WRAPPER}} .ob-kit'=>'--ob-accent: {{VALUE}};']]);
-        $this->add_responsive_control('text_size', ['label'=>'Tamaño del titular','type'=>Controls::SLIDER,'size_units'=>['px','rem'],'range'=>['px'=>['min'=>20,'max'=>110],'rem'=>['min'=>1,'max'=>7]],'selectors'=>['{{WRAPPER}} .ob-widget-title'=>'font-size: {{SIZE}}{{UNIT}};']]);
+        $this->add_responsive_control('text_size', ['label'=>'Tamaño del titular','type'=>Controls::SLIDER,'size_units'=>['px','rem'],'range'=>['px'=>['min'=>20,'max'=>110],'rem'=>['min'=>1,'max'=>7]],'selectors'=>['{{WRAPPER}} .ob-widget-title, {{WRAPPER}} .ob-game h3, {{WRAPPER}} .ob-lane h3'=>'font-size: {{SIZE}}{{UNIT}};']]);
         $this->end_controls_section();
     }
     abstract protected function fields(): void;
