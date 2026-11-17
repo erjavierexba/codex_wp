@@ -1,5 +1,13 @@
 <?php
 if (!defined('ABSPATH')) { exit; }
+if (class_exists('Elementor\\Plugin') && get_post_meta(get_queried_object_id(), '_elementor_edit_mode', true) === 'builder') {
+    get_header();
+    echo '<main id="contenido" class="oldbear-elementor-page">';
+    while (have_posts()) { the_post(); the_content(); }
+    echo '</main>';
+    get_footer();
+    return;
+}
 get_header();
 ?>
 <main id="contenido">

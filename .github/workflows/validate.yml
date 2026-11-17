@@ -1,4 +1,4 @@
-name: Validate WordPress
+name: Validate Elementor and Studio Kit
 on:
   push:
   pull_request:
@@ -14,6 +14,7 @@ jobs:
       - name: Check JS, JSON, SVG and Linux shell
         run: |
           node --check wp-content/themes/oldbearstudios/assets/site.js
+          node --check wp-content/plugins/oldbear-studio/assets/catalog.js
           find . -name '*.sh' -not -path './.git/*' -exec bash -n {} +
           python3 - <<'PY'
           import json, pathlib, xml.etree.ElementTree as ET
@@ -28,6 +29,8 @@ jobs:
         run: OLDBEAR_NO_OPEN=1 bash Instalar.sh
       - name: Validate PHP and WordPress behavior
         run: bash scripts/check.sh
+      - name: Validate Elementor and Studio Kit
+        run: docker compose run --rm cli wp eval-file /opt/oldbear-tests/elementor.php
       - name: Check HTTP pages
         run: |
           curl --fail --retry 10 --retry-delay 2 --retry-connrefused http://localhost:8080/ > /tmp/oldbear-home.html
@@ -36,6 +39,9 @@ jobs:
           html = Path('/tmp/oldbear-home.html').read_text()
           assert 'Pequeño estudio. Grandes aventuras.' in html
           assert 'CONCEPTO VISUAL' in html
+          assert 'elementor-widget-oldbear-hero' in html
+          assert 'elementor-widget-heading' in html
+          assert 'ob-roadmap-lanes' in html
           assert 'Fatal error' not in html
           assert 'name="contact_email"' not in html, 'Form must be disabled before setup'
           PY
@@ -46,7 +52,7 @@ jobs:
         run: bash tests/lifecycle.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: oldbearstudios-wordpress
+          name: oldbearstudios-elementor
           path: dist/*.zip
       - name: Diagnostic logs
         if: failure()

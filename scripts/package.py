@@ -31,7 +31,7 @@ def snapshot_files(path, site_url):
     parser.feed(html)
     for index, url in enumerate(parser.urls):
         parsed = urllib.parse.urlparse(url)
-        if url.startswith(site_url + '/wp-includes/') and parsed.path.endswith('.css'):
+        if url.startswith(site_url + '/') and parsed.path.endswith('.css'):
             name = 'preview-assets/wordpress-' + str(index) + '.css'
             with urllib.request.urlopen(url, timeout=30) as response:
                 assets[name] = response.read()
@@ -39,6 +39,8 @@ def snapshot_files(path, site_url):
     html = re.sub(r'<script\b[^>]*>.*?</script>', '', html, flags=re.S | re.I)
     theme = 'wp-content/themes/oldbearstudios/assets/'
     html = html.replace(site_url + '/' + theme, theme)
+    plugin = 'wp-content/plugins/oldbear-studio/assets/'
+    html = html.replace(site_url + '/' + plugin, plugin)
     html = html.replace(site_url + '/#', '#')
     html = html.replace('href="' + site_url + '/diario/"', 'href="#diario"')
     html = html.replace('href="' + site_url + '/"', 'href="#contenido"')
@@ -63,7 +65,7 @@ def package(snapshot=None, site_url='http://localhost:8080'):
         files.extend(path for path in (ROOT / folder).rglob('*') if path.is_file()
                      and '__pycache__' not in path.parts and path.suffix != '.pyc')
     extras = snapshot_files(snapshot, site_url) if snapshot else {}
-    with zipfile.ZipFile(output / 'OldBearStudios-Linux.zip', 'w') as archive:
+    with zipfile.ZipFile(output / 'OldBearStudios-Elementor-Linux.zip', 'w') as archive:
         for file in sorted(files):
             add_bytes(archive, 'OldBearStudios/' + file.relative_to(ROOT).as_posix(),
                       file.read_bytes(), file.suffix == '.sh')
@@ -76,13 +78,13 @@ def package(snapshot=None, site_url='http://localhost:8080'):
             for file in sorted(source.rglob('*')):
                 if file.is_file():
                     add_bytes(archive, source.name + '/' + file.relative_to(source).as_posix(), file.read_bytes())
-    with zipfile.ZipFile(output / 'OldBearStudios-Linux.zip') as archive:
+    with zipfile.ZipFile(output / 'OldBearStudios-Elementor-Linux.zip') as archive:
         names = archive.namelist()
         assert not any('/data/' in name or name.endswith('/.env') or name.endswith('/ACCESO.txt') for name in names)
         assert all(name.startswith('OldBearStudios/') for name in names)
         if snapshot:
             assert 'OldBearStudios/Vista-previa.html' in names
-    print(output / 'OldBearStudios-Linux.zip')
+    print(output / 'OldBearStudios-Elementor-Linux.zip')
 
 
 if __name__ == '__main__':

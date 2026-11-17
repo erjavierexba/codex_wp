@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: OldBear Studio
- * Description: Juegos y formulario de contacto para OldBearStudios. Conserva el contenido al cambiar de tema.
- * Version: 1.0.0
- * Requires at least: 6.6
+ * Plugin Name: OldBear Studio Kit
+ * Description: Catálogo filtrable, roadmap, contacto y widgets de Elementor para estudios de videojuegos.
+ * Version: 2.0.0
+ * Requires at least: 6.8
  * Requires PHP: 8.2
  * License: GPL-2.0-or-later
  * Text Domain: oldbear-studio
@@ -18,7 +18,7 @@ function oldbear_register_games() {
             'search_items'=>'Buscar juegos','not_found'=>'Todavía no hay juegos.'
         ],
         'public'=>true,'show_in_rest'=>true,'has_archive'=>true,'rewrite'=>['slug'=>'juegos'],
-        'menu_icon'=>'dashicons-games','supports'=>['title','editor','thumbnail','excerpt','revisions'],
+        'show_in_menu'=>'oldbear-studio','menu_icon'=>'dashicons-games','supports'=>['title','editor','thumbnail','excerpt','revisions'],
     ]);
 }
 add_action('init', 'oldbear_register_games');
@@ -28,8 +28,7 @@ function oldbear_deactivate() { unregister_post_type('oldbear_game'); flush_rewr
 register_deactivation_hook(__FILE__, 'oldbear_deactivate');
 
 function oldbear_game_fields() {
-    return ['oldbear_status'=>'Estado (por ejemplo: En desarrollo)','oldbear_genre'=>'Género',
-        'oldbear_platforms'=>'Plataformas','oldbear_store_url'=>'URL de la tienda (opcional)'];
+    return ['oldbear_status'=>'Estado (por ejemplo: En desarrollo)','oldbear_store_url'=>'URL de la tienda (opcional)'];
 }
 function oldbear_add_game_meta_box() {
     add_meta_box('oldbear_game_details', 'Ficha del juego', 'oldbear_render_game_meta_box', 'oldbear_game', 'normal');
@@ -196,3 +195,6 @@ function oldbear_local_mail($mailer) {
 }
 add_action('phpmailer_init', 'oldbear_local_mail');
 
+
+require_once __DIR__ . '/includes/class-kit.php';
+add_action('plugins_loaded', ['OldBearStudio\\Kit', 'boot'], 20);

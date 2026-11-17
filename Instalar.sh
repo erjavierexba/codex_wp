@@ -24,6 +24,9 @@ if ! wp core is-installed >/dev/null 2>&1; then
   wp option add oldbear_fresh_install 1
 fi
 wp eval-file /opt/oldbear-tests/bootstrap.php
+if ! wp plugin is-installed elementor; then wp plugin install elementor --version=3.34.2; fi
+wp plugin activate elementor
+wp oldbear studio-demo
 '
 printf '\nListo. Tu web: %s/\nPanel: %s/wp-admin/\n' "$(oldbear_value WP_URL)" "$(oldbear_value WP_URL)"
 if test -f "$OLDBEAR_ROOT/ACCESO.txt"; then printf 'El usuario y la contraseña están en ACCESO.txt, dentro de esta carpeta.\n'; fi
