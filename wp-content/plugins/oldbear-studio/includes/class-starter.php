@@ -70,7 +70,7 @@ final class Starter {
             return new \WP_Error('incomplete_document', 'Elementor no ha guardado todos los contenedores. No se ha cambiado la portada.');
         }
         update_option('oldbear_elementor_home', $id, false);
-        if ($set_front) { update_option('show_on_front','page'); update_option('page_on_front',$id); self::seed(); }
+        if ($set_front) { update_option('show_on_front','page'); update_option('page_on_front',$id); self::seed(); flush_rewrite_rules(false); }
         return $id;
     }
     public static function seed(): array {

@@ -22,9 +22,19 @@ function oldbear_register_games() {
     ]);
 }
 add_action('init', 'oldbear_register_games');
-function oldbear_activate() { oldbear_register_games(); flush_rewrite_rules(); }
+function oldbear_activate() {
+    oldbear_register_games();
+    require_once __DIR__ . '/includes/class-content.php';
+    \OldBearStudio\Content::register();
+    flush_rewrite_rules();
+}
 register_activation_hook(__FILE__, 'oldbear_activate');
-function oldbear_deactivate() { unregister_post_type('oldbear_game'); flush_rewrite_rules(); }
+function oldbear_deactivate() {
+    unregister_post_type('oldbear_game');
+    if (post_type_exists('ob_milestone')) { unregister_post_type('ob_milestone'); }
+    foreach (['ob_genre','ob_platform'] as $taxonomy) { if (taxonomy_exists($taxonomy)) { unregister_taxonomy($taxonomy); } }
+    flush_rewrite_rules();
+}
 register_deactivation_hook(__FILE__, 'oldbear_deactivate');
 
 function oldbear_game_fields() {

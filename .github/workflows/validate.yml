@@ -51,6 +51,8 @@ jobs:
           assert 'name="contact_email"' not in html, 'Form must be disabled before setup'
           PY
           curl --fail http://localhost:8080/diario/ > /dev/null
+          curl --fail http://localhost:8080/genero/exploracion/ > /dev/null
+          curl --fail http://localhost:8080/plataforma/linux/ > /dev/null
       - name: Package Linux folder and offline preview
         run: python3 scripts/package.py --snapshot /tmp/oldbear-home.html
       - name: Test real stop, restart, reinstall and uninstall
